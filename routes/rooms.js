@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const auth = require('../middlewares/authMiddleware');
 
 // GET /rooms - liste toutes les salles
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const rooms = await prisma.room.findMany();
   res.json(rooms);
 });
@@ -21,7 +22,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET /rooms/:id - détail d’une salle
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id);
   const room = await prisma.room.findUnique({ where: { id } });
   if (!room) {
