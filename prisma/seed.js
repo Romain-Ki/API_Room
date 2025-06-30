@@ -67,8 +67,6 @@ async function main() {
         });
     }
 
-    // --- FIN DE LA CORRECTION ---
-
     console.log('✅ Données de seed insérées !');
 }
 
