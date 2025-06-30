@@ -2,30 +2,22 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const admin = require('../middlewares/adminMiddleware');
 
 /**
  * GET /bookings - Liste les réservations.
  * - Si l'utilisateur est un ADMIN, renvoie toutes les réservations.
  * - Si l'utilisateur est un EMPLOYEE, renvoie uniquement ses propres réservations.
  */
-router.get('/', async (req, res) => {
+router.get('/', admin, async (req, res) => {
   try {
     const user = req.user;
-
-    if (user.admin === 1) {
-      const bookings = await prisma.booking.findMany({
-        include: { user: true, room: true },
-      });
-      res.json(bookings);
-    } else {
-      const bookings = await prisma.booking.findMany({
-        where: { userId: user.id },
-        include: { room: true },
-      });
-      res.json(bookings);
-    }
+    const bookings = await prisma.booking.findMany({
+      include: { user: true, room: true },
+    });
+    res.json(bookings);
   } catch (error) {
-    res.status(500).json({ error: user });
+    res.status(500).json({ error: error.message });
   }
 });
 
