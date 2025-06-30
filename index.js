@@ -5,10 +5,6 @@ const roomsRouter = require('./routes/rooms');
 const authMiddleware = require('./middlewares/authMiddleware');
 const app = express();
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const router = express.Router();
-
-const { z } = require('zod');
 
 
 app.use(express.json());
