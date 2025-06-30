@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 
 const registerSchema = z.object({
+  name: z.string(),
   email: z.string().email(),
   password: z.string().min(6, 'Le mot de passe doit faire au moins 6 caractères'),
 });
@@ -20,17 +21,17 @@ const loginSchema = z.object({
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = registerSchema.parse(req.body);
+    const {name, email, password } = registerSchema.parse(req.body);
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(400).json({ error: 'Email already in use' });
 
     const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashed }
+      data: {name, email, password: hashed }
     });
 
-    res.json({ message: 'User created', user: { id: user.id, email: user.email } });
+    res.json({ message: 'User created', user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ errors: err.errors });
