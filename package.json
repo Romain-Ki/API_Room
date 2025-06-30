@@ -1,0 +1,34 @@
+{
+  "name": "api_room",
+  "version": "1.0.0",
+  "description": "Ce projet est une API REST de base utilisant **Express** pour le serveur web, **Prisma** comme ORM connecté à une base **MySQL**, et **Zod** pour la validation des données.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Romain-Ki/API_Room.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Romain-Ki/API_Room/issues"
+  },
+  "homepage": "https://github.com/Romain-Ki/API_Room#readme",
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "prisma": "^6.10.1",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "prisma": {
+  "seed": "node prisma/seed.js"
+}
+}
