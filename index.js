@@ -8,6 +8,11 @@ const app = express();
 
 app.use(express.json());
 
+
+app.get('/', (req, res) => {
+  res.send('Serveur OK 👍');
+});
+
 // 🟢 Routes publiques (ex: login, register)
 app.use('/auth', authRoutes);
 
@@ -19,10 +24,6 @@ app.use('/rooms', roomsRouter);
 
 app.get('/profile', (req, res) => {
   res.json({ message: `Vous êtes connecté en tant que user ${req.userId}` });
-});
-
-app.get('/', (req, res) => {
-  res.send('Serveur OK 👍');
 });
 
 app.listen(3000, () => {
