@@ -2,14 +2,9 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.user.createMany({
-        data: [
-            { name: 'Alice', email: 'alice@example.com' },
-            { name: 'Bob', email: 'bob@example.com' },
-        ],
-    });
 
-    console.log('✅ Données de seed insérées !');
+
+
 
     await prisma.room.create({
         data: {
@@ -24,6 +19,16 @@ async function main() {
         },
     });
 
+    await prisma.room.create({
+        data: {
+            name: 'Salle B',
+            capacity: 90,
+            features: ["god michele", "lubrifiant", "capote"],
+            rules: {},
+        },
+    });
+
+    console.log('✅ Données de seed insérées !');
 }
 
 main()
