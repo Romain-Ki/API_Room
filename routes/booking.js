@@ -3,6 +3,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const admin = require('../middlewares/adminMiddleware');
+const bookingSchema = require('../zod/bookingSchema');
 
 /**
  * GET /bookings - Liste les réservations.
@@ -26,14 +27,11 @@ router.get('/', admin, async (req, res) => {
  * Applique la logique de validation des règles et des conflits.
  */
 router.post('/', async (req, res) => {
-  const { roomId, start, end } = req.body;
-  const userId = req.user.id;
-
-  if (!roomId || !start || !end) {
-    return res.status(400).json({ error: "Les champs roomId, start et end sont requis." });
-  }
-
   try {
+    const validatedData = bookingSchema.parse(req.body);
+    const { roomId, start, end } = validatedData;
+    
+    const userId = req.user.id;
     const startDate = new Date(start);
     const endDate = new Date(end);
 
@@ -43,7 +41,7 @@ router.post('/', async (req, res) => {
     }
 
     const rules = room.rules || {};
-    const bookingDuration = (endDate - startDate) / (1000 * 60); // Durée en minutes
+    const bookingDuration = (endDate - startDate) / (1000 * 60);
 
     if (rules.maxDurationMinutes && bookingDuration > rules.maxDurationMinutes) {
       return res.status(400).json({ error: `La durée de réservation dépasse le maximum de ${rules.maxDurationMinutes} minutes.` });
@@ -52,13 +50,12 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: "Les réservations ne sont pas autorisées le week-end pour cette salle." });
     }
 
-    // 3. Vérification des conflits de réservation
     const conflictingBooking = await prisma.booking.findFirst({
       where: {
         roomId: roomId,
         AND: [
-          { start: { lt: endDate } }, // La réservation existante commence avant que la nouvelle ne se termine
-          { end: { gt: startDate } },   // ET la réservation existante se termine après que la nouvelle ne commence
+          { start: { lt: endDate } },
+          { end: { gt: startDate } },
         ],
       },
     });
@@ -67,7 +64,6 @@ router.post('/', async (req, res) => {
       return res.status(409).json({ error: "Un conflit de réservation a été détecté. Le créneau est déjà pris." });
     }
 
-    // 4. Création de la réservation
     const newBooking = await prisma.booking.create({
       data: {
         start: startDate,
@@ -80,7 +76,10 @@ router.post('/', async (req, res) => {
     res.status(201).json(newBooking);
 
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (error.name === 'ZodError') {
+      return res.status(400).json({ error: error.errors });
+    }
+    res.status(500).json({ error: "Une erreur interne est survenue" });
   }
 });
 
