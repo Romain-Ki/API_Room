@@ -33,10 +33,8 @@ exit
 
 Fichier .env à la racine :
 ```js
-DATABASE_URL="mysql://root:@127.0.0.1:3306/Roomm"
-```
+JWT_SECRET=une_grosse_cle_ultra_secrete
+// changer user_name et user_password avec les vrais infos
+DATABASE_URL="mysql://user_name:user_password@localhost:3306/Room"
 
-## 🔧 Étape 4 – Initialiser Prisma
-```bash
-npx prisma init
 ```
