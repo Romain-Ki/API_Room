@@ -9,7 +9,9 @@ datasource db {
 
 model User {
   id       Int    @id @default(autoincrement())
+  name     String
   email    String @unique
+  admin    Int @default(0)
   password String
   Booking Booking[]
   createdAt DateTime @default(now())
