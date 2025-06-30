@@ -5,18 +5,8 @@ const jwt = require('jsonwebtoken');
 const { z } = require('zod');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
-
-const registerSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6, 'Le mot de passe doit faire au moins 6 caractères'),
-});
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+const registerSchema = require('../zod/registerSchema');
+const loginSchema = require('../zod/loginSchema');
 
 
 router.post('/register', async (req, res) => {
@@ -57,7 +47,7 @@ router.post('/login', async (req, res) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ errors: err.errors });
     }
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: err.toString() });
   }
 });
 
