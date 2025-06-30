@@ -24,9 +24,16 @@ Ajoute dans package.json :
 ## 🌐 Étape 3 – Configuration MySQL (Wamp/phpMyAdmin)
 
 Crée une base de données dans phpMyAdmin
+```bash
+mysql -u user_name -p
+password
+>create Database Room;
+exit
+```
+
 Fichier .env à la racine :
 ```js
-DATABASE_URL="mysql://root:@127.0.0.1:3306/nom_db"
+DATABASE_URL="mysql://root:@127.0.0.1:3306/Roomm"
 ```
 
 ## 🔧 Étape 4 – Initialiser Prisma

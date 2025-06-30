@@ -26,9 +26,11 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10"
   },
   "prisma": {
-  "seed": "node prisma/seed.js"
-}
+    "seed": "node prisma/seed.js"
+  }
 }
