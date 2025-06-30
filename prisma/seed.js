@@ -1,11 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
     await prisma.user.createMany({
         data: [
-            { id: 1, name: 'Alice', email: 'alice@example.com', password:'123456789', admin:0},
-            { id: 2, name: 'Admin', email: 'admin@admin.com', password:'admin', admin:1},
+            { id: 1, name: 'Alice', email: 'alice@example.com', password: await bcrypt.hash('123456789', 10), admin:0},
+            { id: 2, name: 'Admin', email: 'admin@admin.com', password: await bcrypt.hash('admin', 10), admin:1},
         ],
         skipDuplicates: true,
     });
