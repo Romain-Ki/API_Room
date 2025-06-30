@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 async function authMiddleware(req, res, next) {
   const auth = req.headers.authorization;
@@ -20,7 +21,7 @@ async function authMiddleware(req, res, next) {
     req.user = user;
     next();
   } catch (e) {
-    res.status(403).json({ error: 'Invalid token' });
+    res.status(403).json({ error: "Invalid token" });
   }
 }
 
