@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ errors: err.errors });
     }
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: err.toString() });
   }
 });
 
