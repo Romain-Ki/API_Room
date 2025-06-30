@@ -2,18 +2,19 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const auth = require('../middlewares/authMiddleware');
+const auth = require('../middlewares/authMiddleware'); // ton middleware complet
 
-// GET /rooms - liste toutes les salles
+// GET /rooms - accessible aux utilisateurs connectés
 router.get('/', auth, async (req, res) => {
   const rooms = await prisma.room.findMany();
   res.json(rooms);
 });
 
-// POST /rooms - crée une salle (admin seulement — ici, pas d’auth, juste un exemple)
-router.post('/', async (req, res) => {
+// POST /rooms - accessible uniquement aux admin
+router.post('/', auth, async (req, res) => {
+  // ici, tu es sûr que req.user est admin grâce au middleware
   try {
-    const roomData = req.body; // à valider avec Zod idéalement
+    const roomData = req.body;
     const room = await prisma.room.create({ data: roomData });
     res.status(201).json(room);
   } catch (error) {
@@ -21,7 +22,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /rooms/:id - détail d’une salle
+// GET /rooms/:id - accessible aux utilisateurs connectés
 router.get('/:id', auth, async (req, res) => {
   const id = parseInt(req.params.id);
   const room = await prisma.room.findUnique({ where: { id } });
