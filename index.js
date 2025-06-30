@@ -30,6 +30,13 @@ app.post('/users', async (req, res) => {
   }
 });
 
+const roomsRouter = require('./routes/rooms');
+app.use('/rooms', roomsRouter);
+
+app.listen(3000, () => {
+  console.log('Serveur lancé sur http://localhost:3000');
+});
+
 app.listen(3000, () => {
   console.log('✅ Serveur lancé sur http://localhost:3000');
 });
