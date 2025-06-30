@@ -15,11 +15,6 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/rooms', roomsRouter);
 
-const userSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-});
-
 app.get('/', (req, res) => {
   res.send('Serveur OK 👍');
 });
