@@ -3,6 +3,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const auth = require('../middlewares/authMiddleware'); // ton middleware complet
+const authAdmin = require('../middlewares/adminMiddleware');
 
 // GET /rooms - accessible aux utilisateurs connectés
 router.get('/', auth, async (req, res) => {
@@ -11,8 +12,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // POST /rooms - accessible uniquement aux admin
-router.post('/', auth, async (req, res) => {
-  // ici, tu es sûr que req.user est admin grâce au middleware
+router.post('/', authAdmin, async (req, res) => {
   try {
     const roomData = req.body;
     const room = await prisma.room.create({ data: roomData });
@@ -20,7 +20,7 @@ router.post('/', auth, async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-});
+});;
 
 // GET /rooms/:id - accessible aux utilisateurs connectés
 router.get('/:id', auth, async (req, res) => {
