@@ -13,15 +13,29 @@ model User {
   email    String @unique
   admin    Int @default(0)
   password String
+  Booking Booking[]
   createdAt DateTime @default(now())
 }
 
 model Room {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   capacity  Int
   features  Json
   rules     Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Booking   Booking[]
+}
+
+model Booking {
+  id     Int      @id @default(autoincrement())
+  start  DateTime
+  end    DateTime
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
+  roomId Int
+  room   Room     @relation(fields: [roomId], references: [id])
+
+  @@map("bookings")
 }
